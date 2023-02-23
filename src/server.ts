@@ -1,15 +1,12 @@
-import Fastify from 'fastify';
-import cors from '@fastify/cors';
-import { appRoutes } from './routes';
+require('dotenv').config();
+import express from 'express';
+import cors from 'cors';
+import { router } from './routes';
 
-const app = Fastify();
+const app = express();
 
-app.register(cors);
-app.register(appRoutes);
+app.use(cors());
+app.use(express.json());
+app.use(router);
 
-app.listen({
-  port: 3333,
-  host: '0.0.0.0'
-}).then(() => {
-  console.log(`HTTP Server running on port http://localhost:${3333}`)
-})
+app.listen(3333, () => console.log(`Server is running on port ${3333}`));
