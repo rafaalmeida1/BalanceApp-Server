@@ -5,11 +5,7 @@ import { router } from './routes';
 
 const app = express();
 
-let corsOptions = {
-  origin: "https://balance-app-theta.vercel.app/"
-}
-
-app.use(cors(corsOptions));
+app.use(cors);
 app.use(express.json());
 app.use(router);
 
