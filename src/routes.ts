@@ -21,7 +21,9 @@ export async function appRoutes(app: FastifyInstance) {
       },
     });
 
-    if (findUserAlreadyExists) {
+    const verifySpaces = (string: string) => /\s/g.test(string);
+
+    if (findUserAlreadyExists || verifySpaces(email) || verifySpaces(username)) {
       return res.status(400).send("Email already exists");
     } else {
       user = await prisma.user.create({
