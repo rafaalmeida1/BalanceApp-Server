@@ -1,10 +1,11 @@
 import express, { Request, Response } from "express";
+import cors from "cors";
 import { z } from "zod";
 import { prisma } from "./lib/prisma";
 
 export const router = express.Router();
 
-router.post("/api/register", async (req: Request, res: Response) => {
+router.post("/api/register", cors(), async (req: Request, res: Response) => {
   const userParams = z.object({
     username: z.string(),
     email: z.string(),
