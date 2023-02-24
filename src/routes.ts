@@ -48,7 +48,7 @@ router.post("/api/register", async (req: Request, res: Response) => {
     },
   });
 
-  return res.status(201).json({user, userAccount})
+  res.status(201).json({user, userAccount})
 });
 
 router.post("/api/login", async (req: Request, res: Response) => {
