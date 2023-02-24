@@ -21,9 +21,10 @@ export async function appRoutes(app: FastifyInstance) {
       },
     });
 
-    const verifySpaces = (string: string) => /\s/g.test(string);
+    const verifySpaces = (string: string) => string.indexOf(' ') >= 0;
 
-    if (findUserAlreadyExists || verifySpaces(email) || verifySpaces(username)) {
+
+    if (findUserAlreadyExists && verifySpaces(email) && verifySpaces(username)) { 
       return res.status(400).send("Email already exists");
     } else {
       user = await prisma.user.create({
