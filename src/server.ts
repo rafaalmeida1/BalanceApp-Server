@@ -1,21 +1,15 @@
-require("dotenv").config();
-import express from "express";
-import cors from "cors";
-import { router } from "./routes";
+import Fastify from 'fastify';
+import cors from '@fastify/cors';
+import { appRoutes } from './routes';
 
-const app = express();
+const app = Fastify();
 
-app.use(
-  cors({
-    origin: [
-      "https://balance-app.cyclic.app",
-      "https://balance-app-theta.vercel.app",
-      "https://balance-app-theta.vercel.app/api",
-      "http://localhost:3000",
-    ],
-  })
-);
-app.use(express.json());
-app.use(router);
+app.register(cors);
+app.register(appRoutes);
 
-app.listen(3333, () => console.log(`Server is running on port ${3333}`));
+app.listen({
+  port: 3333,
+  host: '0.0.0.0'
+}).then(() => {
+  console.log(`HTTP Server running on port http://localhost:${3333}`)
+})
