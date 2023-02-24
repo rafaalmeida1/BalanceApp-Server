@@ -1,8 +1,16 @@
 import { FastifyInstance } from "fastify";
 import { z } from "zod";
 import { prisma } from "./lib/prisma";
+import * as bcrypt from 'bcrypt';
+import { ObjectId } from "bson";
+
+const salt = bcrypt.genSaltSync(10);
 
 export async function appRoutes(app: FastifyInstance) {
+  app.get('/', async(req, res) => {
+    return "Hello World"
+  })
+
   app.post("/api/register", async (req, res) => {
     const userParams = z.object({
       username: z.string(),
@@ -12,7 +20,7 @@ export async function appRoutes(app: FastifyInstance) {
 
     const { username, email, password } = userParams.parse(req.body);
 
-    const id = Date.now();
+    const id = new ObjectId()
 
     let user;
     const findUserAlreadyExists = await prisma.user.findFirst({
@@ -32,7 +40,7 @@ export async function appRoutes(app: FastifyInstance) {
           id: String(id),
           username,
           email,
-          password,
+          password: bcrypt.hashSync(password, salt),
 
           user_account: {
             create: {
@@ -64,23 +72,32 @@ export async function appRoutes(app: FastifyInstance) {
 
     const { email, password } = userParams.parse(req.body);
 
+    const selectUser = await prisma.user.findFirst({
+      where: {
+        email
+      }
+    })
+
+    const passwordMatch = bcrypt.compareSync(password, selectUser!.password)
+
     try {
-      const userLoggedIn = await prisma.user.findFirst({
-        where: {
-          email,
-          password,
-        },
-      });
-
-      let userAccount;
-
-      if (userLoggedIn) {
-        userAccount = await prisma.account.findFirst({
+      if(passwordMatch) {
+        const userLoggedIn = await prisma.user.findFirst({
           where: {
-            id: userLoggedIn?.id,
+            email,
           },
         });
-        return res.status(201).send({ userLoggedIn, userAccount });
+  
+        let userAccount;
+  
+        if (userLoggedIn) {
+          userAccount = await prisma.account.findFirst({
+            where: {
+              id: userLoggedIn?.id,
+            },
+          });
+          return res.status(201).send({ userLoggedIn, userAccount });
+        }
       } else {
         return res.status(403).send("Usuário ou senha incorretos");
       }
@@ -139,15 +156,17 @@ export async function appRoutes(app: FastifyInstance) {
       },
     });
 
-    if(password !== userFounded?.password){
+    const passwordMatch = bcrypt.compareSync(password, userFounded!.password)
+
+    if(!passwordMatch){
       return res.status(403).send('Password is incorrect');
     }
 
     if (newPassword === password) {
-      return res.status(403).send("Passwords are the same");
+      return res.status(401).send("Passwords are the same");
     }
 
-    if (userFounded) {
+    if (userFounded && passwordMatch) {
       if (!newPassword) {
         const userUpdate = await prisma.user.update({
           where: {
@@ -155,7 +174,7 @@ export async function appRoutes(app: FastifyInstance) {
           },
           data: {
             email,
-            password,
+            password: bcrypt.hashSync(password, salt),
             username,
           },
         });
@@ -168,7 +187,7 @@ export async function appRoutes(app: FastifyInstance) {
           },
           data: {
             email,
-            password: newPassword,
+            password: bcrypt.hashSync(newPassword, salt),
             username,
           },
         });
