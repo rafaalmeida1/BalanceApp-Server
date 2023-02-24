@@ -7,8 +7,7 @@ networks:
 services:
   postgresql:
     image: postgres:10.3
-    # container_name: dockerpostgresql
-    container_name: dockerbalanceapp
+    container_name: dockerpostgresql
     restart: always
     networks:
       - postgresql-network
@@ -34,6 +33,7 @@ services:
       - postgresql-network
     command: >
       bash -c '
+        npx prisma db push --schema prisma/schema.prisma
         npx prisma generate --schema prisma/schema.prisma
         npm start
       '
