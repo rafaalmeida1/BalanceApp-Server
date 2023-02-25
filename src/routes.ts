@@ -1,15 +1,15 @@
 import { FastifyInstance } from "fastify";
 import { z } from "zod";
 import { prisma } from "./lib/prisma";
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from "bcrypt";
 import { ObjectId } from "bson";
 
 const salt = bcrypt.genSaltSync(10);
 
 export async function appRoutes(app: FastifyInstance) {
-  app.get('/', async(req, res) => {
-    return "Hello World"
-  })
+  app.get("/", async (req, res) => {
+    return "Hello World";
+  });
 
   app.post("/api/register", async (req, res) => {
     const userParams = z.object({
@@ -20,7 +20,7 @@ export async function appRoutes(app: FastifyInstance) {
 
     const { username, email, password } = userParams.parse(req.body);
 
-    const id = new ObjectId()
+    const id = new ObjectId();
 
     let user;
     const findUserAlreadyExists = await prisma.user.findFirst({
@@ -29,11 +29,15 @@ export async function appRoutes(app: FastifyInstance) {
       },
     });
 
-    const verifySpaces = (string: string) => string.indexOf(' ') >= 0;
-
-
-    if (findUserAlreadyExists && verifySpaces(email) && verifySpaces(username)) { 
-      return res.status(400).send("Email already exists");
+    if (
+      email.indexOf(" ") >= 0 ||
+      username.indexOf(" ") >= 0 ||
+      password.indexOf(" ") >= 0 
+    ) {
+      return res.status(400).send('Error in register user on email, username or password')
+    }
+    if (findUserAlreadyExists) {
+        return res.status(400).send("Email already exists");
     } else {
       user = await prisma.user.create({
         data: {
@@ -74,22 +78,22 @@ export async function appRoutes(app: FastifyInstance) {
 
     const selectUser = await prisma.user.findFirst({
       where: {
-        email
-      }
-    })
+        email,
+      },
+    });
 
-    const passwordMatch = bcrypt.compareSync(password, selectUser!.password)
+    const passwordMatch = bcrypt.compareSync(password, selectUser!.password);
 
     try {
-      if(passwordMatch) {
+      if (passwordMatch) {
         const userLoggedIn = await prisma.user.findFirst({
           where: {
             email,
           },
         });
-  
+
         let userAccount;
-  
+
         if (userLoggedIn) {
           userAccount = await prisma.account.findFirst({
             where: {
@@ -156,10 +160,10 @@ export async function appRoutes(app: FastifyInstance) {
       },
     });
 
-    const passwordMatch = bcrypt.compareSync(password, userFounded!.password)
+    const passwordMatch = bcrypt.compareSync(password, userFounded!.password);
 
-    if(!passwordMatch){
-      return res.status(403).send('Password is incorrect');
+    if (!passwordMatch) {
+      return res.status(403).send("Password is incorrect");
     }
 
     if (newPassword === password) {
