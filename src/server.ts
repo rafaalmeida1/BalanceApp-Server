@@ -9,12 +9,12 @@ app.register(cors, {
   allowedHeaders: [
     "Origin",
     "X-Requested-With",
-    "Accept", 
+    "Accept",
     "Content-Type",
     "Authorization",
   ],
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-})
+  methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
+});
 
 app.register(appRoutes);
 
