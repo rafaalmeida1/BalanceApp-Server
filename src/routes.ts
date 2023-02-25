@@ -97,7 +97,7 @@ export async function appRoutes(app: FastifyInstance) {
               id: userLoggedIn?.id,
             },
           });
-          return res.status(201).send({ userLoggedIn, userAccount });
+          return res.send({ userLoggedIn, userAccount });
         }
       } else {
         return res.status(403).send("Usuário ou senha incorretos");
