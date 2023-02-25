@@ -4,12 +4,10 @@ import { appRoutes } from "./routes";
 
 const app = Fastify();
 
-//allow cors for any url
-
 app.register(cors, {
-  origin: true,
-  allowedHeaders: ["Access-Control-Allow-Origin", "*"],
-});
+  origin: true
+})
+
 
 app.register(appRoutes);
 
