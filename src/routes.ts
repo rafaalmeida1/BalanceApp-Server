@@ -115,7 +115,7 @@ export async function appRoutes(app: FastifyInstance) {
 
     const { id } = idParams.parse(req.params);
 
-    const user = await prisma.user.findUnique({
+    const user = await prisma.user.findFirst({
       where: {
         id,
       },
