@@ -8,7 +8,7 @@ app.register(cors, {
   origin: true,
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   preflightContinue: true,
-  optionsSuccessStatus: 201
+  optionsSuccessStatus: 200
 })
 
 
