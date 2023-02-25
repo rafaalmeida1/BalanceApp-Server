@@ -29,7 +29,11 @@ export async function appRoutes(app: FastifyInstance) {
       },
     });
 
-    if (findUserAlreadyExists || email.includes(" ")) {
+    if(!email.trim()) {
+      return res.status(404).send("Email is required");
+    }
+
+    if (findUserAlreadyExists) {
         return res.status(400).send("Email already exists");
     } else {
       user = await prisma.user.create({
