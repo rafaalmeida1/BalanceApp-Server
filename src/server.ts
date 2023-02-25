@@ -5,14 +5,7 @@ import { appRoutes } from "./routes";
 const app = Fastify();
 
 app.register(cors, {
-  origin: "*",
-  allowedHeaders: [
-    "Origin",
-    "X-Requested-With",
-    "Accept",
-    "Content-Type",
-    "Authorization",
-  ],
+  origin: ["http://localhost:3000", "https://balance-app-theta.vercel.app/"],
   methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
 });
 
