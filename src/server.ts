@@ -5,9 +5,10 @@ import { appRoutes } from "./routes";
 const app = Fastify();
 
 app.register(cors, {
-  origin: true,
-  methods: ['GET', 'PUT', 'POST', 'DELETE', 'PATCH'],
-  allowedHeaders: ['Access-Control-Allow-Origin', '*']
+  origin: "*",
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  preflightContinue: true,
+  optionsSuccessStatus: 201
 })
 
 
