@@ -12,6 +12,10 @@ export async function appRoutes(app: FastifyInstance) {
   });
 
   app.post("/api/register", async (req, res) => {
+
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods", "POST");
+
     const userParams = z.object({
       username: z.string(),
       email: z.string(),
@@ -66,6 +70,9 @@ export async function appRoutes(app: FastifyInstance) {
   });
 
   app.post("/api/login", async (req, res) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods", "POST");
+
     const userParams = z.object({
       email: z.string(),
       password: z.string(),
@@ -109,6 +116,9 @@ export async function appRoutes(app: FastifyInstance) {
   });
 
   app.get("/api/user/:id", async (req, res) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods", "GET");
+
     const idParams = z.object({
       id: z.string(),
     });
@@ -135,6 +145,9 @@ export async function appRoutes(app: FastifyInstance) {
   });
 
   app.put("/api/update-user/:id", async (req, res) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods", "PUT");
+
     const paramsId = z.object({
       id: z.string(),
     });
