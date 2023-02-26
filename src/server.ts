@@ -6,18 +6,6 @@ const app = Fastify();
 
 app.register(fastifyCors, {
   origin: "*",
-  exposedHeaders: [
-    "Origin",
-    "*",
-    "Content-Type",
-    '*',
-    "Authorization",
-    '*',
-    "Control-Allow-Origin",
-    '*',
-    "Control-Allow-Headers",
-    '*'
-  ],
   methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
 });
 
