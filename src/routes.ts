@@ -2,8 +2,6 @@ import { FastifyInstance } from "fastify";
 import { z } from "zod";
 import { prisma } from "./lib/prisma";
 import * as bcrypt from "bcrypt";
-import { ObjectId } from "bson";
-
 const salt = bcrypt.genSaltSync(10);
 
 export async function appRoutes(app: FastifyInstance) {
@@ -24,7 +22,7 @@ export async function appRoutes(app: FastifyInstance) {
 
     const { username, email, password } = userParams.parse(req.body);
 
-    const id = new ObjectId();
+    const id = Date.now();
 
     let user;
     const findUserAlreadyExists = await prisma.user.findFirst({

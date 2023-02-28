@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "src/server.ts",
+  "engines": {
+    "node": ">=16"
+  },
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "start": "node ./build/server.js",
@@ -12,6 +15,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@fastify/cookie": "^8.3.0",
     "@fastify/cors": "^8.2.0",
     "@prisma/client": "^4.10.1",
     "bcrypt": "^5.1.0",
